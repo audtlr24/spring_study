@@ -12,8 +12,12 @@ import spring.ChangePasswordService;
 import spring.MemberRegisterService;
 import spring.WrongIdPasswordException;
 import spring.DuplicateMemberException;
+import spring.MemberInfoPrinter;
 import spring.MemberNotFoundException;
 import spring.RegisterRequest;
+import spring.VersionPrinter;
+import spring.MemberListPrinter;
+import spring.MemberPrinter;
 
 public class MainForSpring {
 	
@@ -36,6 +40,15 @@ public class MainForSpring {
 				continue;
 			}else if (command.startsWith("change ")) {
 				processChangeCommand(command.split(" "));
+				continue;
+			}else if (command.contentEquals("list")) {
+				processListCommand();
+				continue;
+			}else if(command.startsWith("info ")) {
+				processInfoCommand(command.split(" "));
+				continue;
+			}else if (command.equals("version")) {
+				processVersionCommand();
 				continue;
 			}
 			printHelp();
@@ -89,6 +102,25 @@ public class MainForSpring {
 		System.out.println("new 이메일 이름 암호 암호확인");
 		System.out.println("change 이메일 현재암호 바꾸는암호");
 		System.out.println();
+	}
+	
+	private static void processListCommand() {
+		MemberListPrinter listPrinter = ctx.getBean("listPrinter",MemberListPrinter.class);
+		listPrinter.printAll();
+	}
+	
+	private static void processInfoCommand(String[] arg) {
+		if(arg.length != 2) {
+			printHelp();
+			return;
+		}
+		MemberInfoPrinter infoPrinter = ctx.getBean("infoPrinter",MemberInfoPrinter.class);
+		infoPrinter.printMemberInfo(arg[1]);
+	}
+	
+	private static void processVersionCommand() {
+		VersionPrinter versionPrinter = ctx.getBean("versionPrinter",VersionPrinter.class);
+		versionPrinter.print();
 	}
 
 }
