@@ -21,6 +21,8 @@ public class MainForMemberDao {
 		updateMember();
 		insertMember();
 		
+		selectAll();
+		
 		ctx.close();
 
 	}
