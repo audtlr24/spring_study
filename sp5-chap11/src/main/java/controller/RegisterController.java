@@ -2,6 +2,7 @@ package controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,11 +42,16 @@ public class RegisterController {
 	}
 	
 	@PostMapping("/register/step3")
-	public String handleStep3(RegisterRequest regReq) { //세터 매서드를 포함하는 객체를 넣어주면, 일치하는 요청 파라미터의 값을 객체로 담아주는 기능을함
+	public String handleStep3(RegisterRequest regReq, Errors errors) { //세터 매서드를 포함하는 객체를 넣어주면, 일치하는 요청 파라미터의 값을 객체로 담아주는 기능을함
+		new RegisterRequestValidator().validate(regReq, errors);
+		if(errors.hasErrors()) {
+			return "register/step2";
+		}
 		try {
 			memRegSvc.regist(regReq);
 			return "register/step3";
 		}catch (DuplicateMemberException e) {
+			errors.rejectValue("email", "duplicate");
 			return "register/step2";
 		}
 	}
