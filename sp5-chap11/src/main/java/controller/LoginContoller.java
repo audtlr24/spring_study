@@ -1,5 +1,7 @@
 package controller;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,13 +27,16 @@ public class LoginContoller {
 	}
 	
 	@PostMapping
-	public String submit(LoginCommand loginCommand, Errors errors) {
+	public String submit(LoginCommand loginCommand, Errors errors, HttpSession session) {
 		new LoginCommandValidator().validate(loginCommand, errors);
 		if(errors.hasErrors()) {
 			return "login/loginForm";
 			}
 		try{
 			Authinfo authInfo = authService.authtificate(loginCommand.getEmail(), loginCommand.getPassword());
+			
+			session.setAttribute("authInfo", authInfo);
+			
 			return "login/loginSuccess";
 		}catch(WrongIdPasswordException e) {
 			errors.reject("idPasswordNotMatching");

@@ -15,6 +15,6 @@ public class AuthService {
 		if(!member.matchPassword(password)) {
 			throw new WrongIdPasswordException();
 		}
-		return new Authinfo(member.getId(),member.getEmail(),member.getPassword());
+		return new Authinfo(member.getId(), member.getEmail(), member.getName());
 	}
 }
