@@ -1,0 +1,41 @@
+package controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import spring.AuthService;
+import spring.Authinfo;
+import spring.WrongIdPasswordException;
+
+@Controller
+@RequestMapping("/login")
+public class LoginContoller {
+	private AuthService authService;
+	
+	public void setAuthService(AuthService authService) {
+		this.authService = authService;
+	}
+	
+	@GetMapping
+	public String form(LoginCommand loginCommand) {
+		return "login/loginForm";
+	}
+	
+	@PostMapping
+	public String submit(LoginCommand loginCommand, Errors errors) {
+		new LoginCommandValidator().validate(loginCommand, errors);
+		if(errors.hasErrors()) {
+			return "login/loginForm";
+			}
+		try{
+			Authinfo authInfo = authService.authtificate(loginCommand.getEmail(), loginCommand.getPassword());
+			return "login/loginSuccess";
+		}catch(WrongIdPasswordException e) {
+			errors.reject("idPasswordNotMatching");
+			return "login/loginForm";
+		}
+	}
+}
