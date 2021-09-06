@@ -75,5 +75,13 @@ public class MemberDao {
 				from,to);
 		return results;
 	}
+	
+	public Member selectById(Long memId){
+		List<Member> results = jdbcTemplate.query(
+				"select * from MEMBER where ID = ?",
+				new MemberRowMapper(),
+				memId);
+		return results.isEmpty() ? null : results.get(0);
+	}
 }
 
