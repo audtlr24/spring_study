@@ -12,6 +12,8 @@ import spring.AuthService;
 import spring.ChangePasswordService;
 import spring.MemberRegisterService;
 import survey.SurveyController;
+import controller.MemberListController;
+import spring.MemberDao;
 
 @Configuration
 public class ControllerConfig {
@@ -22,6 +24,8 @@ public class ControllerConfig {
 	private AuthService authService;
 	@Autowired
 	private ChangePasswordService changePasswordService;
+	@Autowired
+	private MemberDao memberDao;
 	
 	@Bean
 	public RegisterController registerController() {
@@ -51,6 +55,13 @@ public class ControllerConfig {
 	public ChangePwdContoller changePwdContoller() {
 		ChangePwdContoller controller = new ChangePwdContoller();
 		controller.setChangePasswordService(changePasswordService);
+		return controller;
+	}
+	
+	@Bean
+	public MemberListController memberListController() {
+		MemberListController controller = new MemberListController();
+		controller.setMemberDao(memberDao);
 		return controller;
 	}
 

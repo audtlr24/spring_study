@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -63,6 +64,16 @@ public class MemberDao {
 		},keyHolder); // update method 의 두번째 인자로 keyHolder를 전달
 		Number keyValue = keyHolder.getKey();
 		member.setId(keyValue.longValue());
+	}
+	
+	public List<Member> selectByRegdate(LocalDateTime from, LocalDateTime to){
+		
+		List<Member> results = jdbcTemplate.query(
+				"select * from MEMBER where REGDATE between ? and ?"+
+				"order by REGDATE desc",
+				new MemberRowMapper(),
+				from,to);
+		return results;
 	}
 }
 
